@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HLS Qualities</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+</head>
+
+<body>
+
+    <video id="video" autoplay controls></video>
+    <button onclick="getAvailableQualities()">Obter Qualidades Disponíveis</button>
+
+    <script>
+        var video = document.getElementById('video');
+        var videoSrc = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
+        var hls;
+
+        function initializeHls() {
+            hls = new Hls();
+            hls.loadSource(videoSrc);
+            hls.attachMedia(video);
+        }
+
+        if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = videoSrc;
+        } else if (Hls.isSupported()) {
+            initializeHls();
+        }
+
+        function getAvailableQualities() {
+            if (hls) {
+                console.log('Qualidades Disponíveis:');
+                hls.levels.forEach((level, index) => {
+                    console.log(index + 1, level.height + 'p', 'Bitrate:', (level.bitrate / 1000).toFixed(2) + ' kbps');
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>
